@@ -9,6 +9,7 @@ describe Telegram do
     @telegram.instance_eval("@type = #{@type_value}")
   end
 
+
   describe "when accessing the type property" do
     it "allows read access" do
       @telegram.type.must_equal @type_value
@@ -19,6 +20,7 @@ describe Telegram do
       @telegram.type.must_equal @type_value
     end
   end
+
 
   describe "when getting the telegram as bytes" do
     it "must return the type value as the first element of the array" do
@@ -32,7 +34,5 @@ describe Telegram do
       @telegram.max_size_in_bytes.must_equal 64
     end
   end
-
-
 
 end
