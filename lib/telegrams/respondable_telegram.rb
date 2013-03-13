@@ -1,3 +1,5 @@
+require_relative './telegram'
+
 class RespondableTelegram < Telegram
   def initialize(require_response=true)
     @require_response = require_response
