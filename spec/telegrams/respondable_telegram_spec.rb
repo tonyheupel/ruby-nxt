@@ -5,7 +5,8 @@ require_relative '../../lib/telegrams/respondable_telegram'
 class MockRespondableTelegram < RespondableTelegram
   def initialize(response_required=true)
     super
-    @type =0x06
+    @type = 0x06
+    @command = 0x07
   end
 end
 
@@ -35,6 +36,14 @@ describe RespondableTelegram do
     end
   end
 
+  it "must have a readable command property" do
+    @telegram.command
+  end
+
+  it "must default command to nil" do
+    @telegram.command.must_be_nil
+  end
+
   describe "when using the telegram as a collection of bytes" do
     describe "when wanting a reply from this telegram" do
       it "will leave the type in the first byte field alone" do
@@ -47,6 +56,11 @@ describe RespondableTelegram do
         mrt = MockRespondableTelegram.new false
         mrt.as_bytes[0].must_equal 0x86
       end
+    end
+
+    it "must have the command as the second byte" do
+      mrt = MockRespondableTelegram.new
+      mrt.as_bytes[1].must_equal 0x07
     end
   end
 end

@@ -1,8 +1,10 @@
 require_relative './telegram'
 
 class RespondableTelegram < Telegram
+  attr_reader :command
   def initialize(require_response=true)
     @require_response = require_response
+    @command = nil
   end
 
   def require_response?
@@ -15,7 +17,7 @@ class RespondableTelegram < Telegram
 
   # override
   def as_bytes
-    [adjust_type_for_require_response]
+    [adjust_type_for_require_response, command]
   end
 
   protected
