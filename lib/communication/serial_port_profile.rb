@@ -16,6 +16,9 @@ class SerialPortProfile
     establish_connection if @connection.nil?
   end
 
+  def disconnect
+    @connection.close unless @connection.nil? || @connection.closed?
+  end
 
   def send_data_package(package)
 

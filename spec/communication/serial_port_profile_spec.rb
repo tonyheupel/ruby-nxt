@@ -2,48 +2,13 @@ require 'minitest/autorun'
 
 require_relative '../../lib/communication/serial_port_profile.rb'
 
-class FakeSerialPortConnection
-#   attr_accessor :baud, :data_bits, :stop_bits, :parity,
-#                 :flow_control, :read_timeout, :write_timeout
-#
-#   def initialize(port_num)
-#     @port_num = port_num
-#     @data_bits = 8
-#     @stop_bits = 1
-#     @parity = @data_bits == 8 ? SerialPort::NONE : SerialPort::EVEN
-#   end
-#
-#   def get_modem_params
-#     { 'baud' => baud,
-#       'data_bits' => data_bits,
-#       'stop_bits' => stop_bits,
-#       'parity' => parity
-#     }
-#   end
-#
-#   def set_modem_params(baud, data_bits=nil, stop_bits=nil, parity=nil)
-#     @baud = baud
-#     @data_bits = data_bits unless data_bits.nil?
-#     @stop_bits = stop_bits unless stop_bits.nil?
-#     @parity = parity unless parity.nil?
-#   end
-#
-#   def set_modem_params(hash)
-#     set_modem_params(hash['baud'], hash['data_bits'], hash['stop_bits'], hash['parity'])
-#   end
-#
-#   def modem_params
-#     get_modem_params
-#   end
-#
-#   def modem_params=(hash)
-#     set_modem_params(hash)
-#   end
-#
-#   def open
-#     true
-#   end
-#
+class FakeSerialPortConnection; end
+
+# Open up SerialPortProfile to be able to set the connection
+class SerialPortProfile
+  def connection=(value)
+    @connection = value
+  end
 end
 
 describe SerialPortProfile do
@@ -104,6 +69,57 @@ describe SerialPortProfile do
 
       profile.connect
       mock_connection_class.verify
+    end
+  end
+
+  describe "when closing the connection" do
+    before do
+      @mock_connection = MiniTest::Mock.new
+      @mock_connection_class = MiniTest::Mock.new.expect(:new, @mock_connection,
+        ['dev', 57600, 8, 1, SerialPort::NONE]
+      )
+      @mock_connection.expect(:close, nil)
+
+      @profile = SerialPortProfile.new('dev', @mock_connection_class);
+    end
+
+    it "should not call close if there is no connection object" do
+      @mock_connection.expect(:nil?, true)
+      @profile.connection = @mock_connection
+
+      @profile.disconnect
+
+      # Assert that MockExpectationError was raised because close was not called
+      # We dont' want close to be called, ensure that the MockExpectationError for
+      # close IS IN FACT raised.
+      assert_raises(MockExpectationError, "close should be called") do
+        @mock_connection.verify
+      end
+    end
+
+    it "should not call close if there is a connection object but it is already closed" do
+      @mock_connection.expect(:nil?, false)
+      @mock_connection.expect(:closed?, true)
+      @profile.connection = @mock_connection
+
+      @profile.disconnect
+
+      # Assert that MockExpectationError was raised because close was not called
+      # We dont' want close to be called, ensure that the MockExpectationError for
+      # close IS IN FACT raised.
+      assert_raises(MockExpectationError, "close should be called") do
+        @mock_connection.verify
+      end
+    end
+
+    it "should call close if there is an open connection" do
+      @mock_connection.expect(:nil?, false)
+      @mock_connection.expect(:closed?, false)
+      @profile.connection = @mock_connection
+
+      @profile.disconnect
+
+      @mock_connection.verify
     end
   end
 end
