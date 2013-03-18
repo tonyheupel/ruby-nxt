@@ -12,20 +12,6 @@ class SerialPortProfile
 end
 
 describe SerialPortProfile do
-  describe "temporary tests" do
-    before do
-      @profile = SerialPortProfile.new('')
-    end
-
-    it "must have a send_data_package method" do
-      @profile.must_respond_to :send_data_package
-    end
-
-    it "must have a receive_data_package method" do
-      @profile.must_respond_to :receive_data_package
-    end
-  end
-
   describe "when creating a new instance" do
     it "must raise an ArgumentError if the device is nil" do
       -> { SerialPortProfile.new }.must_raise ArgumentError
