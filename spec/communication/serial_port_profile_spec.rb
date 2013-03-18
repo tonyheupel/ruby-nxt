@@ -122,4 +122,31 @@ describe SerialPortProfile do
       @mock_connection.verify
     end
   end
+
+  describe "when sending a data package" do
+    before do
+      @mock_connection_class = MiniTest::Mock.new
+      @profile = SerialPortProfile.new('dev', @mock_connection_class)
+
+      @mock_connection = MiniTest::Mock.new
+      @profile.connection = @mock_connection
+    end
+
+    it "should send each byte from the package in order" do
+      @mock_connection.expect(:putc, nil, [0x00])
+      @mock_connection.expect(:putc, nil, [0x01])
+      @mock_connection.expect(:putc, nil, [0x02])
+
+      @profile.send_data_package([0x00, 0x01, 0x02])
+
+      @mock_connection.verify
+    end
+
+    it "should receive each byte in order as an array of bytes" do
+      @mock_connection.expect(:sysread, [0x00, 0x01, 0x02], [1024 * 64 + 2])
+
+      @profile.receive_data_package.must_equal [0x00, 0x01, 0x02]
+      @mock_connection.verify
+    end
+  end
 end

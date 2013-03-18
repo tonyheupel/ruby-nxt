@@ -21,11 +21,17 @@ class SerialPortProfile
   end
 
   def send_data_package(package)
-
+    # No intelligence here, just send the package
+    package.each do |byte|
+      @connection.putc byte
+    end
   end
 
   def receive_data_package
-
+    # No intelligence here, just read the max of 64KB + 2 length bytes
+    # As long as there's SOMETHING on the wire, there will be no EOFError
+    max_length = (1024 * 64) + 2
+    @connection.sysread(max_length)
   end
 
   def settings
