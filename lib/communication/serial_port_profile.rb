@@ -27,9 +27,9 @@ class SerialPortProfile
     end
   end
 
-  def receive_data_package(max_length=(1024*64)+2)
+  def receive_data_package(max_length=(64+2))
     # No intelligence here, just read the max length
-    # (default is 64KB plus 2 length bytes, but that is leaking abstractions)
+    # (default is 64 bytes plus 2 length bytes for bluetooth, but that is leaking abstractions)
     # As long as there's SOMETHING on the wire, there will be no EOFError
     @connection.sysread(max_length)
   end

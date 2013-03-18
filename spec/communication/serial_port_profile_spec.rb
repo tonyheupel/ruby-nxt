@@ -129,7 +129,8 @@ describe SerialPortProfile do
     end
 
     it "should receive each byte in order as an array of bytes" do
-      @mock_connection.expect(:sysread, [0x00, 0x01, 0x02], [1024 * 64 + 2])
+      # 64 is the max length in bytes of a message, + 2 for bluetooth overhead
+      @mock_connection.expect(:sysread, [0x00, 0x01, 0x02], [64 + 2])
 
       @profile.receive_data_package.must_equal [0x00, 0x01, 0x02]
       @mock_connection.verify
