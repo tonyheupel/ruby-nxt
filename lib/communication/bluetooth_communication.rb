@@ -15,7 +15,7 @@ class BluetoothCommunication
     @profile.disconnect
   end
 
-  def send(message)
+  def send_message(message)
     # TODO: Determine whether to wait for response or not
     package = create_bluetooth_data_package(message)
     @profile.send_data_package(package)

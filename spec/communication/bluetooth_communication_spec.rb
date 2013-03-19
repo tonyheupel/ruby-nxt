@@ -53,7 +53,7 @@ describe BluetoothCommunication do
       message = MiniTest::Mock.new.expect(:as_bytes, [0,1,2])
       @mock_profile.expect(:send_data_package, nil, [[3,0,0,1,2]])
 
-      @communication.send(message)
+      @communication.send_message(message)
 
       message.verify
       @mock_profile.verify
