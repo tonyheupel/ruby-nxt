@@ -43,7 +43,6 @@ describe StartProgram do
 
       name_bytes.must_equal name_as_asciiz
     end
-
   end
 
 end
