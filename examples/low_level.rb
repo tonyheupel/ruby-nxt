@@ -33,7 +33,25 @@ bt.send_message(start, NoMessageReply) do | reply |
     puts "Stopped."
 
     puts "Disconnecting."
-    bt.disconnect
+#    bt.disconnect
   end
   puts "Done."
 end
+
+require './lib/telegrams/commands/system/get_device_info'
+require './lib/telegrams/commands/system/replies/get_device_info_reply'
+
+puts "Connecting..."
+#bt.connect
+
+get_device_info = GetDeviceInfo.new
+device_info = bt.send_message(get_device_info, GetDeviceInfoReply)
+
+raise "Error getting device info: #{device_info.status}" unless device_info.success?
+bt.disconnect
+
+puts "Name: #{device_info.nxt_brick_name}"
+puts "Bluetooth address: #{device_info.bt_address}"
+puts "Signal strength: #{device_info.signal_strength}"
+puts "Free user Flash memory #{device_info.free_user_flash_memory_bytes} (#{device_info.free_user_flash_memory_bytes / 1024} KB)"
+
