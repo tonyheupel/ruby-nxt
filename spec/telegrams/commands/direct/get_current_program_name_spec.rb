@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../../../lib/telegrams/commands/direct/get_current_program_name'
+require './lib/telegrams/commands/direct/get_current_program_name'
 
 describe GetCurrentProgramName do
   describe "when constructing the object" do

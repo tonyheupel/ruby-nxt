@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../../lib/telegrams/commands/system_command'
+require './lib/telegrams/commands/system_command'
 
 
 describe SystemCommand do

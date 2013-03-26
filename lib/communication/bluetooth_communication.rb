@@ -15,10 +15,27 @@ class BluetoothCommunication
     @profile.disconnect
   end
 
-  def send_message(message)
-    # TODO: Determine whether to wait for response or not
+  def send_message(message, reply_class=nil, &block)
     package = create_bluetooth_data_package(message)
     @profile.send_data_package(package)
+
+    if message.require_response?
+      response = receive_message
+
+      response = reply_class.new(response) unless reply_class.nil?
+
+      if block_given?
+        yield response
+      else
+        response
+      end
+    end
+  end
+
+  def receive_message
+    bluetooth_message = @profile.receive_data_package
+    message_parts = split_message_into_header_and_message(bluetooth_message)
+    convert_raw_received_message_to_bytes(message_parts[:message])
   end
 
 
@@ -41,4 +58,26 @@ class BluetoothCommunication
     # NOTE: Since the max message length is 64 bytes, the Most Significant Byte
     #       should always be zero since the length fits in one byte (LSB)
   end
+
+  def split_message_into_header_and_message(raw_message)
+    { :header => raw_message[0..1],
+      :message => raw_message[2..-1]
+    }
+  end
+
+  def get_length_of_received_message_from_bluetooth_header(header)
+    # note - this moves the @profile's current position
+    #
+    # This gets the length of the received data from the header that was sent
+    # to us. We unpack it, as it's stored as a 16-bit Little Endian number.
+    #
+    # Reference: Appendix 1, Page 22
+    header.unpack('v*')[0] # first element only
+  end
+
+  def convert_raw_received_message_to_bytes(raw_message)
+    # 8-bit unsigned characters
+    raw_message.unpack("C*")
+  end
+
 end

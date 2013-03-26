@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../../../lib/telegrams/commands/direct/stop_program'
+require './lib/telegrams/commands/direct/stop_program'
 
 
 describe StopProgram do

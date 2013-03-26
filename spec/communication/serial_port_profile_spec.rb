@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../lib/communication/serial_port_profile.rb'
+require './lib/communication/serial_port_profile'
 
 class FakeSerialPortConnection; end
 

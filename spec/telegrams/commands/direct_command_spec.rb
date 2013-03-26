@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../../lib/telegrams/commands/direct_command'
+require './lib/telegrams/commands/direct_command'
 
 
 describe DirectCommand do

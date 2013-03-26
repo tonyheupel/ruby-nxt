@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../lib/telegrams/respondable_telegram'
+require './lib/telegrams/respondable_telegram'
 
 class MockRespondableTelegram < RespondableTelegram
   def initialize(response_required=true)

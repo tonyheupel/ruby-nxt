@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../lib/telegrams/telegram'
+require './lib/telegrams/telegram'
 
 describe Telegram do
   before do

@@ -1,6 +1,6 @@
-require 'minitest/autorun'
+require './spec/helper'
 
-require_relative '../../../../lib/telegrams/commands/direct/start_program'
+require './lib/telegrams/commands/direct/start_program'
 
 
 describe StartProgram do
