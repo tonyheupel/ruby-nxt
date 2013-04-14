@@ -23,10 +23,10 @@ describe GetCurrentProgramNameReply do
       reply.program_name.must_equal @filename
     end
 
-    it "must raise a RuntimeError if the reply is not for GetCurrentProgramName" do
+    it "must raise an ArgumentError if the reply is not for GetCurrentProgramName" do
       reply_bytes = [2, 0x01, 0].concat(@filename_bytes)
 
-      -> { reply = GetCurrentProgramNameReply.new(reply_bytes) }.must_raise RuntimeError
+      -> { reply = GetCurrentProgramNameReply.new(reply_bytes) }.must_raise ArgumentError
     end
   end
 

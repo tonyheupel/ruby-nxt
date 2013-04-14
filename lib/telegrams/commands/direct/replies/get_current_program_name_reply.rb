@@ -5,8 +5,7 @@ class GetCurrentProgramNameReply < DirectCommandReply
   include MessageTranslator
 
   def initialize(bytes)
-    super
-    raise RuntimeError, "reply must be for 0x11, but was #{command}" unless command == 0x11
+    super(bytes)
     @message = parse_message_bytes_into_filename
   end
 
@@ -19,6 +18,11 @@ class GetCurrentProgramNameReply < DirectCommandReply
   end
 
   private
+  def validate_bytes(bytes)
+    super(bytes)
+    raise ArgumentError, "reply must be for a GetCurrentProgramName command" unless bytes[1] == 0x11
+  end
+
   def parse_message_bytes_into_filename
     string_from_bytes(message_bytes)
   end
