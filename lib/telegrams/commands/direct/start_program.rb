@@ -1,15 +1,17 @@
 require_relative '../direct_command'
+require_relative '../message_translator'
 
 class StartProgram < DirectCommand
+  include MessageTranslator
+
   attr_reader :name
 
-  PROGRAM_NAME_MAX_LENGTH = 20 # 15.3 + null terminator
   def initialize(program_name, require_response=true)
     raise ArgumentError, "program_name is required" if program_name.nil?
 
     super(require_response)
     @command = 0x00  # startprogram
-    @name = program_name
+    @name = adjust_program_name(program_name)
   end
 
   def as_bytes
@@ -19,8 +21,10 @@ class StartProgram < DirectCommand
 
   private
   def program_name_as_bytes
-    # pad out to max program name length with null characters
-    # and then convert all to ASCIIZ
-    @name.ljust(PROGRAM_NAME_MAX_LENGTH, "\0").unpack('C*')
+    string_as_bytes(@name)
+  end
+
+  def adjust_program_name(name)
+    /.+\.[A-Za-z0-9]{3}$/.match(name).nil? ? "#{name}.rxe" : name
   end
 end

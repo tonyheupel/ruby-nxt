@@ -46,7 +46,7 @@ class Reply < Telegram
     0xFF => 'Bad arguments'
   }
 
-  attr_accessor :type, :command, :status, :message_bytes
+  attr_accessor :type, :command, :status, :message_bytes, :status_description
 
   def initialize(bytes=nil)
     validate_bytes(bytes)
@@ -54,7 +54,7 @@ class Reply < Telegram
     @command = bytes[1]
     @status = bytes[2]
     @message_bytes = bytes[3..-1]
-    @status_description = nil
+    set_status_description
   end
 
 
@@ -62,13 +62,6 @@ class Reply < Telegram
     status == SUCCESS
   end
 
-  def status_description
-    if @status_description.nil?
-      @status_description = STATUS_MESSAGES.include?(status) ? STATUS_MESSAGES[status] : ''
-    end
-
-    @status_description
-  end
 
   def message
     # override in subclasses to translate bytes to something meaningful
@@ -81,5 +74,9 @@ class Reply < Telegram
     raise ArgumentError, "must be non-nil" if bytes.nil?
     raise ArgumentError, "must have a type, command, and status" unless bytes.size && bytes.size >= 3
     raise ArgumentError, "must be a reply telegram" unless bytes[0] == COMMAND_TYPE
+  end
+
+  def set_status_description
+    @status_description = STATUS_MESSAGES.include?(status) ? STATUS_MESSAGES[status] : ''
   end
 end

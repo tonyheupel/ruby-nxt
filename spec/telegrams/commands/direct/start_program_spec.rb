@@ -22,7 +22,17 @@ describe StartProgram do
     end
 
     it "must set the program name to the value passed in" do
-      StartProgram.new('name').name.must_equal 'name'
+      StartProgram.new('name.rxe').name.must_equal 'name.rxe'
+    end
+
+    it "must try adding '.rxe' to the end of the filename if there is no file extension" do
+      name = 'program'
+      StartProgram.new(name).name.must_equal "#{name}.rxe"
+    end
+
+    it "must leave the filename alone if there is a 3 letter extension of any kind" do
+      name = 'program.foo'
+      StartProgram.new(name).name.must_equal name
     end
   end
 

@@ -1,19 +1,19 @@
 require './spec/helper'
 
-require './lib/telegrams/commands/direct/stop_sound_playback'
+require './lib/telegrams/commands/direct/stop_program'
 
 
-describe StopSoundPlayback do
+describe StopProgram do
   before do
-    @command = StopSoundPlayback.new
+    @command = StopProgram.new
   end
 
   it "must be a direct command type" do
-    @command.type.must_equal DirectCommand.new.type
+    @command.type.must_equal StopProgram.new.type
   end
 
-  it "must have a command of 0x0C" do
-    @command.command.must_equal 0x0C
+  it "must have a command of 0x01" do
+    @command.command.must_equal 0x01
   end
 
   it "must start out with its type at the first byte" do
@@ -26,7 +26,7 @@ describe StopSoundPlayback do
 
   describe "when NOT wanting to wait for a reply" do
     it "must have a first byte of 0x80" do
-      no_wait_command = StopSoundPlayback.new false
+      no_wait_command = StopProgram.new false
       no_wait_command.as_bytes[0].must_equal 0x80
     end
   end
