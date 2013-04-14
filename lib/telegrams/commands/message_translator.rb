@@ -13,6 +13,10 @@ module MessageTranslator
     bytes.pack("C*").strip
   end
 
+  def add_default_extension_if_missing(filename, default_extension)
+    /.+\.[A-Za-z0-9]{3}$/.match(filename).nil? ? "#{filename}.#{default_extension}" : filename
+  end
+
   def boolean_as_bytes(boolean)
     boolean ? [0xff] : [0x00]
   end

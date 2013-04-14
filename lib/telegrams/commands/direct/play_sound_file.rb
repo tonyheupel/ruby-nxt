@@ -33,6 +33,6 @@ class PlaySoundFile < DirectCommand
   end
 
   def adjust_sound_filename(name)
-    /.+\.[A-Za-z0-9]{3}$/.match(name).nil? ? "#{name}.rso" : name
+    add_default_extension_if_missing(name, 'rso')
   end
 end

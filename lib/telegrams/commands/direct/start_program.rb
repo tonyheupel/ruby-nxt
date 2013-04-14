@@ -25,6 +25,6 @@ class StartProgram < DirectCommand
   end
 
   def adjust_program_name(name)
-    /.+\.[A-Za-z0-9]{3}$/.match(name).nil? ? "#{name}.rxe" : name
+    add_default_extension_if_missing(name, 'rxe')
   end
 end
