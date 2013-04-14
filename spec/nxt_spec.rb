@@ -161,6 +161,31 @@ describe NXT do
     end
   end
 
+
+  describe "when calling get_current_program_name" do
+    before do
+      @command = GetCurrentProgramName.new
+      # reply with a successful reply for GetCurrentProgramName with filename "foo.bar"
+      @reply = GetCurrentProgramNameReply.new([0x02, 0x11, 0x00,
+                                               102, 111, 111, 46, 98, 97, 114, 0,
+                                               0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, GetCurrentProgramNameReply])
+      @nxt = NXT.new('device', @communication)
+    end
+
+    it "must call the communication object with a GetCurrentProgramName command" do
+      @nxt.get_current_program_name
+    end
+
+      it "must return the appropriate GetCurrentProgramNameReply object when waiting for a reply" do
+        @nxt.get_current_program_name.must_be_same_as @reply
+      end
+
+      it "must have the right filename as the message" do
+        @nxt.get_current_program_name.program_name.must_equal "foo.bar"
+      end
+  end
+
   describe "when calling async" do
     it "must be an instance of NXTAsync" do
       NXT.new('device_path').async.must_be_instance_of NXTAsync

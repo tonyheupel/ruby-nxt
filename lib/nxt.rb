@@ -54,6 +54,11 @@ class NXT
     send_message(PlaySoundFile.new(sound_filename, loop_sound, wait_for_reply), PlaySoundFileReply)
   end
 
+  def get_current_program_name
+    # always requires a reply, so no constructor argument to allow an override
+    send_message(GetCurrentProgramName.new, GetCurrentProgramNameReply)
+  end
+
   # System commands
   def get_device_info
     # always requires a reply, so no constructor argument to allow an override
