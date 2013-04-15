@@ -41,7 +41,7 @@ begin
   puts "Playing song...do you recognize it?"
   song.each do |note|
     nxt.play_tone(note.pitch, note.length)
-    sleep(note.length/1000 + 0.5)
+    sleep(note.length/1000 + 0.3)
   end
 
   puts "It was Old MacDonald Had a Farm!"
