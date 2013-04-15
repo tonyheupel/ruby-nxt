@@ -186,6 +186,32 @@ describe NXT do
       end
   end
 
+  describe "when calling play_tone" do
+
+    before do
+      @command = PlayTone.new(400, 1000)
+      @reply = PlayToneReply.new([0x02, 0x03, 0x00])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopProgramReply])
+      @nxt = TestableNXT.new('device', @communication)
+    end
+
+    it "must call the communication object with a PlayTone command" do
+      @nxt.play_tone(400, 1000)
+      @nxt.command.must_be_instance_of PlayTone
+      @nxt.command.frequency.must_equal 400
+      @nxt.command.duration.must_equal 1000
+    end
+
+    it "must wait for a reply by default" do
+      @nxt.play_tone(400, 1000)
+      @nxt.command.require_response?.must_equal true
+    end
+
+    it "must return the appropriate PlayToneReply object when waiting for a reply" do
+      @nxt.play_tone(400, 1000).must_be_same_as @reply
+    end
+  end
+
   describe "when calling async" do
     it "must be an instance of NXTAsync" do
       NXT.new('device_path').async.must_be_instance_of NXTAsync
@@ -267,5 +293,11 @@ describe NXTAsync do
     end
   end
 
-
+  describe "play_tone" do
+    it "must send a PlayTone command without waiting for reply" do
+      @async.play_tone(400, 1000)
+      @async.command.must_be_instance_of PlayTone
+      @async.command.require_response?.must_equal false
+    end
+  end
 end

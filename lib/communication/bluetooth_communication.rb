@@ -29,6 +29,8 @@ class BluetoothCommunication
       else
         response
       end
+    else
+      nil # return nil when no response is required
     end
   end
 

@@ -25,4 +25,10 @@ module MessageTranslator
     bytes == [0x00] ? false : true
   end
 
+  def integer_as_uword_bytes(integer)
+   uword_byte_length = 4  # make sure number is 4 bytes, or 2, 2 digit hex values
+   bytes_string = integer.to_s(16).rjust(uword_byte_length, "0")
+   [bytes_string].pack('H*').bytes.to_a.reverse # reverse because it's MSB
+  end
+
 end
