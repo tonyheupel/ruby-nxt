@@ -63,6 +63,9 @@ class NXT
     send_message(PlayTone.new(frequency_hz, duration_ms, wait_for_reply), PlayToneReply)
   end
 
+  def set_input_mode(input_port, sensor_type, sensor_mode)
+    send_message(SetInputMode.new(input_port, sensor_type, sensor_mode, wait_for_reply), SetInputModeReply)
+  end
 
   # System commands
   def get_device_info
