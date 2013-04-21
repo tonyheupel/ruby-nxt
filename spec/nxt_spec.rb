@@ -91,7 +91,7 @@ describe NXT do
     before do
       @command = StartProgram.new('program.rxe')
       @reply = StartProgramReply.new([0x02, 0x00, 0x00])
-      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopProgramReply])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StartProgramReply])
       @nxt = TestableNXT.new('device', @communication)
     end
 
@@ -122,7 +122,7 @@ describe NXT do
     before do
       @command = StopSoundPlayback.new
       @reply = StopSoundPlaybackReply.new([0x02, 0x0C, 0x00])
-      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopProgramReply])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopSoundPlaybackReply])
       @nxt = NXT.new('device', @communication)
     end
 
@@ -138,9 +138,9 @@ describe NXT do
 
   describe "when calling play_sound_file" do
     before do
-      @command = PlaySoundFile.new('program.rxe')
+      @command = PlaySoundFile.new('foobar.rso')
       @reply = PlaySoundFileReply.new([0x02, 0x02, 0x00])
-      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopProgramReply])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, PlaySoundFileReply])
       @nxt = TestableNXT.new('device', @communication)
     end
 
@@ -191,7 +191,7 @@ describe NXT do
     before do
       @command = PlayTone.new(400, 1000)
       @reply = PlayToneReply.new([0x02, 0x03, 0x00])
-      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, StopProgramReply])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, PlayToneReply])
       @nxt = TestableNXT.new('device', @communication)
     end
 
@@ -211,6 +211,34 @@ describe NXT do
       @nxt.play_tone(400, 1000).must_be_same_as @reply
     end
   end
+
+  describe "when calling set_input_mode" do
+    before do
+      @command = SetInputMode.new(:three, :colorred, :booleanmode)
+      @reply = SetInputModeReply.new([0x02, 0x05, 0x00])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, SetInputModeReply])
+      @nxt = TestableNXT.new('device', @communication)
+    end
+
+    it "must call the communication object with a SetInputMode command" do
+      @nxt.set_input_mode(:three, :colorred, :booleanmode)
+      @nxt.command.must_be_instance_of SetInputMode
+      @nxt.command.input_port.must_equal :three
+      @nxt.command.sensor_type.must_equal :colorred
+      @nxt.command.sensor_mode.must_equal :booleanmode
+    end
+
+    it "must wait for a reply by default" do
+      @nxt.set_input_mode(:three, :colorred, :booleanmode)
+      @nxt.command.require_response?.must_equal true
+    end
+
+
+    it "must return the appropriate SetInputModeReply object when waiting for a reply" do
+      @nxt.set_input_mode(:three, :colorred, :booleanmode).must_be_same_as @reply
+    end
+  end
+
 
   describe "when calling async" do
     it "must be an instance of NXTAsync" do

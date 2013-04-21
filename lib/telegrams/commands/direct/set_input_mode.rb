@@ -1,6 +1,15 @@
 require_relative '../direct_command'
 
 class SetInputMode < DirectCommand
+
+  class << self
+    def input_ports; INPUT_PORTS.keys; end
+    def sensor_types; SENSOR_TYPES.keys; end
+    def sensor_modes; SENSOR_MODES.keys; end
+  end
+
+  attr_reader :input_port, :sensor_type, :sensor_mode
+
 	def initialize(input_port, sensor_type, sensor_mode, response_required=true)
 		super(response_required)
 		@command = 0x05
@@ -15,8 +24,7 @@ class SetInputMode < DirectCommand
     one: 0x00,
     two: 0x01,
     three: 0x02,
-    four: 0x03,
-    all: 0xFF
+    four: 0x03
   }
 
   SENSOR_TYPES = {}
@@ -56,19 +64,19 @@ class SetInputMode < DirectCommand
   }
 
   def sensor_types
-    SENSOR_TYPES
+    self.class.sensor_types
   end
 
   def sensor_modes
-    SENSOR_MODES
+    self.class.sensor_modes
   end
 
   def input_ports
-    INPUT_PORTS
+    self.class.input_ports
   end
 
   def as_bytes
-    super << input_ports[@input_port] << sensor_types[@sensor_type] << sensor_modes[@sensor_mode]
+    super << INPUT_PORTS[@input_port] << SENSOR_TYPES[@sensor_type] << SENSOR_MODES[@sensor_mode]
   end
 
   private
@@ -79,15 +87,15 @@ class SetInputMode < DirectCommand
   end
   
   def validate_input_port(input_port)
-    raise ArgumentError, "Invalid input port" unless input_ports.keys.include? input_port
+    raise ArgumentError, "Invalid input port" unless input_ports.include? input_port
   end
 
   def validate_sensor_type(sensor_type)
-    raise ArgumentError, "Invalid sensor type" unless sensor_types.keys.include? sensor_type
+    raise ArgumentError, "Invalid sensor type" unless sensor_types.include? sensor_type
   end
 
   def validate_sensor_mode(sensor_mode)
-    raise ArgumentError, "Invalid sensor mode" unless sensor_modes.keys.include? sensor_mode
+    raise ArgumentError, "Invalid sensor mode" unless sensor_modes.include? sensor_mode
   end
   
 end
