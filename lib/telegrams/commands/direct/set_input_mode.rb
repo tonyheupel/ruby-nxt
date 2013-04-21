@@ -19,7 +19,7 @@ class SetInputMode < DirectCommand
     @sensor_type = sensor_type
     @sensor_mode = sensor_mode
 	end
-  
+
   INPUT_PORTS = {
     one: 0x00,
     two: 0x01,
@@ -85,7 +85,7 @@ class SetInputMode < DirectCommand
     validate_sensor_type(sensor_type)
     validate_sensor_mode(sensor_mode)
   end
-  
+
   def validate_input_port(input_port)
     raise ArgumentError, "Invalid input port" unless input_ports.include? input_port
   end
@@ -97,5 +97,5 @@ class SetInputMode < DirectCommand
   def validate_sensor_mode(sensor_mode)
     raise ArgumentError, "Invalid sensor mode" unless sensor_modes.include? sensor_mode
   end
-  
+
 end
