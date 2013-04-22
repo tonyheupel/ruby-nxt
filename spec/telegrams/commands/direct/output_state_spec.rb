@@ -26,19 +26,24 @@ describe OutputState do
       @state.port.must_equal :a
     end
 
-    it "must accept a 'with_power(power)' message that sets the value and retuns the object itself" do
+    it "must accept a 'with_power(power)' message that sets the value and returns the object itself" do
       @state.with_power(100).must_equal @state
       @state.power.must_equal 100
     end
 
-    it "must accept a 'with_mode_flags(mode_flags)' that sets the value and retuns the object itself" do
+    it "must accept a 'with_mode_flags(mode_flags)' that sets the value and returns the object itself" do
       @state.with_mode_flags(OutputModeFlags.MOTORON | OutputModeFlags.REGULATED).must_equal @state
       @state.mode_flags.must_equal OutputModeFlags.MOTORON | OutputModeFlags.REGULATED
     end
 
-    it "must accept a 'with_regulation_mode(regulation_mode)' that sets the value and retuns the object itself" do
+    it "must accept a 'with_regulation_mode(regulation_mode)' that sets the value and returns the object itself" do
       @state.with_regulation_mode(:motor_speed).must_equal @state
       @state.regulation_mode.must_equal :motor_speed
+    end
+
+    it "must accept a 'with_turn_ratio(turn_ratio)' message that sets the value and returns the object itself" do
+      @state.with_turn_ratio(100).must_equal @state
+      @state.turn_ratio.must_equal 100
     end
   end
 
@@ -61,9 +66,10 @@ describe OutputState do
     end
 
     it "must validate that the power is between -100 and 100" do
-      @state.power = -100
-      @state.power = 0
-      @state.power = 100
+      [-100, 0, 100].each do |power|
+        @state.power = power
+        @state.power.must_equal power
+      end
       -> { @state.power = -101 }.must_raise ArgumentError
       -> { @state.power = 101 }.must_raise ArgumentError
     end
@@ -85,6 +91,15 @@ describe OutputState do
 
       -> { @state.regulation_mode = :garbage }.must_raise ArgumentError
       -> { @state.regulation_mode = 1 }.must_raise ArgumentError
+    end
+
+    it "must validate that the turn_ratio is between -100 and 100" do
+      [-100, 0, 100].each do |turn_ratio|
+        @state.turn_ratio = turn_ratio
+        @state.turn_ratio.must_equal turn_ratio
+      end
+      -> { @state.turn_ratio = -101 }.must_raise ArgumentError
+      -> { @state.turn_ratio = 101 }.must_raise ArgumentError
     end
   end
 

@@ -171,9 +171,13 @@ class OutputState
   end
 
   def turn_ratio=(turn_ratio)
+    raise ArgumentError, "turn_ratio must be between -100 and 100" unless turn_ratio.between?(-100, 100)
+    @turn_ratio = turn_ratio
   end
 
   def with_turn_ratio(turn_ratio)
+    self.turn_ratio = turn_ratio
+    self
   end
 
   def run_state=(run_state)
