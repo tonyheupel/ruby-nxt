@@ -35,6 +35,11 @@ describe OutputState do
       @state.with_mode_flags(OutputModeFlags.MOTORON | OutputModeFlags.REGULATED).must_equal @state
       @state.mode_flags.must_equal OutputModeFlags.MOTORON | OutputModeFlags.REGULATED
     end
+
+    it "must accept a 'with_regulation_mode(regulation_mode)' that sets the value and retuns the object itself" do
+      @state.with_regulation_mode(:motor_speed).must_equal @state
+      @state.regulation_mode.must_equal :motor_speed
+    end
   end
 
   describe "when using the setter methods" do
@@ -70,6 +75,16 @@ describe OutputState do
       end
 
       -> { @state.mode_flags = 8 }.must_raise ArgumentError
+    end
+
+    it "must validate that the regulation_mode is one of the valid enumerations" do
+      [:idle, :motor_speed, :motor_sync].each do |regulation_mode|
+        @state.regulation_mode = regulation_mode
+        @state.regulation_mode.must_equal regulation_mode
+      end
+
+      -> { @state.regulation_mode = :garbage }.must_raise ArgumentError
+      -> { @state.regulation_mode = 1 }.must_raise ArgumentError
     end
   end
 
