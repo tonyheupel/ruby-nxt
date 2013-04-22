@@ -45,6 +45,11 @@ describe OutputState do
       @state.with_turn_ratio(100).must_equal @state
       @state.turn_ratio.must_equal 100
     end
+
+    it "must accept a 'with_run_state(run_state)' that sets the value and returns the object itself" do
+      @state.with_run_state(:ramp_up).must_equal @state
+      @state.run_state.must_equal :ramp_up
+    end
   end
 
   describe "when using the setter methods" do
@@ -100,6 +105,16 @@ describe OutputState do
       end
       -> { @state.turn_ratio = -101 }.must_raise ArgumentError
       -> { @state.turn_ratio = 101 }.must_raise ArgumentError
+    end
+
+    it "must validate that the run_state is one of the valid enumerations" do
+      [:idle, :running, :ramp_up, :ramp_down].each do |run_state|
+        @state.run_state = run_state
+        @state.run_state.must_equal run_state
+      end
+
+      -> { @state.run_state = :garbage }.must_raise ArgumentError
+      -> { @state.run_state = 1 }.must_raise ArgumentError
     end
   end
 

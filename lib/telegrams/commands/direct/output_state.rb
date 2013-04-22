@@ -180,10 +180,18 @@ class OutputState
     self
   end
 
+  def run_states
+    self.class.run_states
+  end
+
   def run_state=(run_state)
+    raise ArgumentError, "run_state must be :idle, :running, :ramp_up, or :ramp_down" unless run_states.include?(run_state)
+    @run_state = run_state
   end
 
   def with_run_state(run_state)
+    self.run_state = run_state
+    self
   end
 
   def tacho_limit=(tacho_limit)
