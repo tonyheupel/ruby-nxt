@@ -131,7 +131,6 @@ describe OutputState do
       @state.tacho_limit.must_equal 39123
     end
   end
-
 end
 
 describe OutputModeFlags do

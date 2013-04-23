@@ -1,3 +1,5 @@
+require_relative '../message_translator'
+
 # OutputModeFlags can be used together with the mode_flags on SetOutputState
 class OutputModeFlags
   class << self
@@ -68,6 +70,8 @@ end
 
 # Output state
 class OutputState
+  include MessageTranslator
+
   attr_reader :port, :power, :mode_flags, :regulation_mode,
               :turn_ratio, :run_state, :tacho_limit
 
@@ -206,6 +210,18 @@ class OutputState
 
   def with_tacho_limit(tacho_limit)
     self.tacho_limit = tacho_limit
+    self
+  end
+
+  def as_bytes
+    [
+      PORTS[port], 
+      power,
+      mode_flags,
+      REGULATION_MODES[regulation_mode],
+      turn_ratio,
+      RUN_STATES[run_state]
+    ].concat(integer_as_ulong_bytes(tacho_limit))
   end
 
 

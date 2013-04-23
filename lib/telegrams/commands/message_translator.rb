@@ -26,7 +26,15 @@ module MessageTranslator
   end
 
   def integer_as_uword_bytes(integer)
-   uword_byte_length = 4  # make sure number is 4 bytes, or 2, 2 digit hex values
+   integer_as_bytes(integer, 4) # make sure number is 4 bytes, or 2, 2 digit hex values
+  end
+
+  def integer_as_ulong_bytes(integer)
+   integer_as_bytes(integer, 8) # (4 bytes as 2 digit hex values each)
+  end
+
+  def integer_as_bytes(integer, bytes_length)
+   uword_byte_length = bytes_length
    bytes_string = integer.to_s(16).rjust(uword_byte_length, "0")
    [bytes_string].pack('H*').bytes.to_a.reverse # reverse because it's MSB
   end
