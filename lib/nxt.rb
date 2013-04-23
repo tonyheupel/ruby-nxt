@@ -67,6 +67,10 @@ class NXT
     send_message(SetInputMode.new(input_port, sensor_type, sensor_mode, wait_for_reply), SetInputModeReply)
   end
 
+  def set_output_state(output_state)
+    send_message(SetOutputState.new(output_state, wait_for_reply),SetOutputStateReply)
+  end
+
   # System commands
   def get_device_info
     # always requires a reply, so no constructor argument to allow an override

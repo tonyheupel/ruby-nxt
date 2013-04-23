@@ -13,7 +13,7 @@ describe SetOutputState do
 
     it "must set the output_state member to what is passed in" do
       state = OutputState.new
-      SetOutputState.new(state).output_state.must_equal state
+      SetOutputState.new(state).instance_eval('output_state').must_equal state
     end
   end
 

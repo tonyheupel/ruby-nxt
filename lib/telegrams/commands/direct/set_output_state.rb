@@ -2,7 +2,7 @@ require_relative '../direct_command'
 require_relative './output_state'
 
 class SetOutputState < DirectCommand
-  attr_reader :output_state
+  extend Forwardable
 
   def initialize(output_state, wait_for_reply=true)
     super(wait_for_reply)
@@ -16,5 +16,13 @@ class SetOutputState < DirectCommand
     super.concat(@output_state.as_bytes)
   end
 
+  # follow Law of Demeter and hide internal access to output_state
+  def_delegators :@output_state, :port, :power, :mode_flags, :regulation_mode,
+                                 :turn_ratio, :run_state, :tacho_limit
+
+  private
+  def output_state
+    @output_state
+  end
 end
 

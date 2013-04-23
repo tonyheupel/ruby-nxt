@@ -240,6 +240,34 @@ describe NXT do
   end
 
 
+  describe "when calling set_output_state" do
+    before do
+      @state = OutputState.new(:port => :c, :power => 55, :regulation_mode => :motor_sync)
+      @command = SetOutputState.new(@state)
+      @reply = SetOutputStateReply.new([0x02, 0x04, 0x00])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, SetOutputStateReply])
+      @nxt = TestableNXT.new('device', @communication)
+    end
+
+    it "must call the communication object with a SetOutputState command" do
+      @nxt.set_output_state(@state)
+      @nxt.command.must_be_instance_of SetOutputState
+      @nxt.command.port.must_equal :c
+      @nxt.command.power.must_equal 55
+      @nxt.command.regulation_mode.must_equal :motor_sync
+    end
+
+    it "must wait for a reply by default" do
+      @nxt.set_output_state(OutputState.new)
+      @nxt.command.require_response?.must_equal true
+    end
+
+
+    it "must return the appropriate SetOutputStateReply object when waiting for a reply" do
+      @nxt.set_output_state(OutputState.new).must_be_same_as @reply
+    end
+  end
+
   describe "when calling async" do
     it "must be an instance of NXTAsync" do
       NXT.new('device_path').async.must_be_instance_of NXTAsync
@@ -325,6 +353,15 @@ describe NXTAsync do
     it "must send a PlayTone command without waiting for reply" do
       @async.play_tone(400, 1000)
       @async.command.must_be_instance_of PlayTone
+      @async.command.require_response?.must_equal false
+    end
+  end
+
+  describe "set_output_state" do
+    it "must send a SetOutputState command without waiting for a reply" do
+      state = Object.new
+      @async.set_output_state(state)
+      @async.command.instance_eval('output_state').must_equal state
       @async.command.require_response?.must_equal false
     end
   end
