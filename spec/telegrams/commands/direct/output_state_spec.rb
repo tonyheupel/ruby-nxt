@@ -50,6 +50,11 @@ describe OutputState do
       @state.with_run_state(:ramp_up).must_equal @state
       @state.run_state.must_equal :ramp_up
     end
+
+    it "must accept a 'with_tacho_limit(tacho_limit)' that sets the value and returns the object itself" do
+      @state.with_tacho_limit(325).must_equal @state
+      @state.tacho_limit.must_equal 325
+    end
   end
 
   describe "when using the setter methods" do
@@ -115,6 +120,15 @@ describe OutputState do
 
       -> { @state.run_state = :garbage }.must_raise ArgumentError
       -> { @state.run_state = 1 }.must_raise ArgumentError
+    end
+
+    it "must have a constant representing 'run forever' or 'unlimited'" do
+      OutputState.RUN_FOREVER.must_equal 0
+    end
+
+    it "must set the tacho_limit" do
+      @state.tacho_limit = 39123  # it's an unsigned long value, 4 bytes
+      @state.tacho_limit.must_equal 39123
     end
   end
 

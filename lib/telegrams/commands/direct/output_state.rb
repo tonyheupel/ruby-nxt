@@ -103,6 +103,11 @@ class OutputState
     def run_states
       RUN_STATES.keys
     end
+
+    # used with the tacho_limit
+    def RUN_FOREVER
+      0
+    end
   end
 
   def initialize(options={})
@@ -194,10 +199,13 @@ class OutputState
     self
   end
 
+
   def tacho_limit=(tacho_limit)
+    @tacho_limit = tacho_limit
   end
 
   def with_tacho_limit(tacho_limit)
+    self.tacho_limit = tacho_limit
   end
 
 
