@@ -1,5 +1,6 @@
 def should_exclude_file(filename, current_directory)
-  filename == File.join(current_directory, __FILE__)
+  filename == File.join(current_directory, __FILE__) ||
+  filename == File.join(current_directory, 'telegrams', 'commands', 'direct', 'output_state.rb')
 end
 
 current_directory = File.dirname(__FILE__)

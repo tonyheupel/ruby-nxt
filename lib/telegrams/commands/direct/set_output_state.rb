@@ -1,5 +1,6 @@
 require_relative '../direct_command'
 require_relative './output_state'
+require 'forwardable'
 
 class SetOutputState < DirectCommand
   extend Forwardable
