@@ -135,7 +135,7 @@ class OutputState
   end
 
   def port=(port)
-    raise ArgumentError unless ports.include? port
+    raise ArgumentError, "invalid port" unless ports.include? port
 
     @port = port
   end
