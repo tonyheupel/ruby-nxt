@@ -268,6 +268,34 @@ describe NXT do
     end
   end
 
+
+  describe "when calling get_battery_level" do
+    before do
+      @command = GetBatteryLevel.new
+      @reply = GetBatteryLevelReply.new([0x02, 0x0B, 0x00, 0x1B, 0x10])  # bytes at indexes 3-4 is the battery level in millivolts
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, GetBatteryLevelReply])
+      @nxt = TestableNXT.new('device', @communication)
+    end
+
+    it "must send a GetBatteryLevel command " do
+      @nxt.get_battery_level
+      @nxt.command.must_be_instance_of GetBatteryLevel
+    end
+
+    it "must wait for a reply by default" do
+      @nxt.get_battery_level
+      @nxt.command.require_response?.must_equal true
+    end
+
+    it "must return the appropriate GetBatteryLevelReply object when waiting for a reply" do
+      this_reply = @nxt.get_battery_level
+      this_reply.must_be_same_as @reply
+      this_reply.millivolts.must_equal 4123
+      this_reply.volts.must_equal 4.123
+    end
+  end
+
+
   describe "when calling async" do
     it "must be an instance of NXTAsync" do
       NXT.new('device_path').async.must_be_instance_of NXTAsync
@@ -365,4 +393,6 @@ describe NXTAsync do
       @async.command.require_response?.must_equal false
     end
   end
+
+
 end

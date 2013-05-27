@@ -72,6 +72,10 @@ class NXT
     send_message(SetOutputState.new(output_state, wait_for_reply),SetOutputStateReply)
   end
 
+  def get_battery_level
+    send_message(GetBatteryLevel.new, GetBatteryLevelReply)
+  end
+
   # System commands
   def get_device_info
     # always requires a reply, so no constructor argument to allow an override

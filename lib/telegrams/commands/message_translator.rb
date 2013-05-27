@@ -39,4 +39,8 @@ module MessageTranslator
    [bytes_string].pack('H*').bytes.to_a.reverse # reverse because it's MSB
   end
 
+  def integer_from_bytes(bytes)
+    bytes.reverse.pack('C*').unpack('H*')[0].hex
+  end
+
 end
