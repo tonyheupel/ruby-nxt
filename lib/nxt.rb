@@ -76,6 +76,20 @@ class NXT
     send_message(GetBatteryLevel.new, GetBatteryLevelReply)
   end
 
+
+  private
+  def yet_to_be_implemented_method
+    raise NotImplementedError, "This method is not yet implemented"
+  end
+
+  public
+  [:get_output_state, :get_input_values, :reset_input_scaled_value,
+       :message_write, :reset_motor_position, :keep_alive,
+       :ls_get_status, :ls_write, :ls_read,
+       :message_read].each do |method|
+         alias_method method, :yet_to_be_implemented_method
+  end
+
   # System commands
   def get_device_info
     # always requires a reply, so no constructor argument to allow an override

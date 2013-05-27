@@ -295,6 +295,21 @@ describe NXT do
     end
   end
 
+  describe "yet-to-be implemented" do
+    before do
+      @nxt = TestableNXT.new('device')
+    end
+
+    it "must raise NotImplementedError for these methods" do
+      [:get_output_state, :get_input_values, :reset_input_scaled_value,
+       :message_write, :reset_motor_position, :keep_alive,
+       :ls_get_status, :ls_write, :ls_read,
+       :message_read].each do |method|
+         -> { @nxt.send(method) }.must_raise NotImplementedError
+       end
+    end
+  end
+
 
   describe "when calling async" do
     it "must be an instance of NXTAsync" do
