@@ -21,7 +21,7 @@ $ bundle install
 ## Usage
 The most basic usage can be done using the NXT class by connecting your NXT 2.0
 brick over Bluetooth.  In the examples below, the brick is connected at
-```/dev/tty.NXT-/devB```:
+``` /dev/tty.NXT-/devB ```:
 
 ```ruby
 require 'nxt'
