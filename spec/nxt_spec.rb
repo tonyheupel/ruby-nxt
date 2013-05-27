@@ -295,6 +295,24 @@ describe NXT do
     end
   end
 
+  describe "when calling reset_motor_position" do
+    before do
+      @command = ResetMotorPosition.new
+      @reply = ResetMotorPositionReply.new([0x02, 0x0A, 0x00])
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, ResetMotorPositionReply])
+      @nxt = NXT.new('device', @communication)
+    end
+
+    it "must call the communication object with a ResetMotorPosition command" do
+      @nxt.reset_motor_position
+    end
+
+      it "must return the appropriate ResetMotorPositionReply object when waiting for a reply" do
+        @nxt.reset_motor_position.must_be_same_as @reply
+      end
+  end
+
+
   describe "yet-to-be implemented" do
     before do
       @nxt = TestableNXT.new('device')
@@ -302,7 +320,7 @@ describe NXT do
 
     it "must raise NotImplementedError for these methods" do
       [:get_output_state, :get_input_values, :reset_input_scaled_value,
-       :message_write, :reset_motor_position, :keep_alive,
+       :message_write, :keep_alive,
        :ls_get_status, :ls_write, :ls_read,
        :message_read].each do |method|
          -> { @nxt.send(method) }.must_raise NotImplementedError
@@ -409,5 +427,12 @@ describe NXTAsync do
     end
   end
 
+  describe "reset_motor_position" do
+    it "must send a ResetMotorPosition command without waiting for reply" do
+      @async.reset_motor_position
+      @async.command.must_be_instance_of ResetMotorPosition
+      @async.command.require_response?.must_equal false
+    end
+  end
 
 end

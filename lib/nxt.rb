@@ -76,6 +76,9 @@ class NXT
     send_message(GetBatteryLevel.new, GetBatteryLevelReply)
   end
 
+  def reset_motor_position
+    send_message(ResetMotorPosition.new(wait_for_reply), ResetMotorPositionReply)
+  end
 
   private
   def yet_to_be_implemented_method
@@ -84,7 +87,7 @@ class NXT
 
   public
   [:get_output_state, :get_input_values, :reset_input_scaled_value,
-       :message_write, :reset_motor_position, :keep_alive,
+       :message_write, :keep_alive,
        :ls_get_status, :ls_write, :ls_read,
        :message_read].each do |method|
          alias_method method, :yet_to_be_implemented_method
