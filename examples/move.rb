@@ -5,13 +5,17 @@ nxt = NXT.new('/dev/tty.NXT-DevB')
 puts "Connecting..."
 nxt.connect
 
-puts "Driving forward two rotations, ramping up to 75 power and then coasting..."
+puts "Going to spin the robot in-place 180 degrees to the left..."
+turn_ratio = 100
+rotations = 2.7
+
 state = OutputState.new :port => :c,
                         :power => 75,
                         :mode_flags => OutputModeFlags.REGULATED | OutputModeFlags.MOTORON,
                         :regulation_mode => :motor_sync,
+                        :turn_ratio => turn_ratio,
                         :run_state => :running,
-                        :tacho_limit => 360 * 2
+                        :tacho_limit => (360 * rotations).to_i
 
 nxt.set_output_state state
 puts "Doesn't go yet..."
@@ -21,8 +25,9 @@ state = OutputState.new :port => :b,
                         :power => 75,
                         :mode_flags => OutputModeFlags.REGULATED | OutputModeFlags.MOTORON,
                         :regulation_mode => :motor_sync,
+                        :turn_ratio => turn_ratio * -1,
                         :run_state => :running,
-                        :tacho_limit => 360 * 2
+                        :tacho_limit => (360 * rotations).to_i
 
 puts "Should go now..."
 nxt.set_output_state state
