@@ -80,6 +80,10 @@ class NXT
     send_message(ResetMotorPosition.new(wait_for_reply), ResetMotorPositionReply)
   end
 
+  def keep_alive
+    send_message(KeepAlive.new, KeepAliveReply)
+  end
+
   private
   def yet_to_be_implemented_method
     raise NotImplementedError, "This method is not yet implemented"
@@ -87,9 +91,8 @@ class NXT
 
   public
   [:get_output_state, :get_input_values, :reset_input_scaled_value,
-       :message_write, :keep_alive,
-       :ls_get_status, :ls_write, :ls_read,
-       :message_read].each do |method|
+       :message_write, :message_read,
+       :ls_get_status, :ls_write, :ls_read].each do |method|
          alias_method method, :yet_to_be_implemented_method
   end
 

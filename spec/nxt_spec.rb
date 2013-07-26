@@ -312,6 +312,31 @@ describe NXT do
       end
   end
 
+  describe "when calling keep_alive" do
+    before do
+      @command = KeepAlive.new
+      @reply = KeepAliveReply.new([0x02, 0x0D, 0x00, 0x15, 0xCD, 0x5B, 0x07])  # bytes at indexes 3-6 is the keep alive time in milliseconds
+      @communication = MiniTest::Mock.new.expect(:send_message, @reply, [@command, KeepAliveReply])
+      @nxt = TestableNXT.new('device', @communication)
+    end
+
+    it "must send a KeepAlive command " do
+      @nxt.keep_alive
+      @nxt.command.must_be_instance_of KeepAlive
+    end
+
+    it "must wait for a reply by default" do
+      @nxt.keep_alive
+      @nxt.command.require_response?.must_equal true
+    end
+
+    it "must return the appropriate KeepAliveReply object when waiting for a reply" do
+      this_reply = @nxt.keep_alive
+      this_reply.must_be_same_as @reply
+      this_reply.milliseconds.must_equal 123_456_789
+      this_reply.seconds.must_equal 123_456.789
+    end
+  end
 
   describe "yet-to-be implemented" do
     before do
@@ -320,9 +345,8 @@ describe NXT do
 
     it "must raise NotImplementedError for these methods" do
       [:get_output_state, :get_input_values, :reset_input_scaled_value,
-       :message_write, :keep_alive,
-       :ls_get_status, :ls_write, :ls_read,
-       :message_read].each do |method|
+       :message_write, :message_read,
+       :ls_get_status, :ls_write, :ls_read].each do |method|
          -> { @nxt.send(method) }.must_raise NotImplementedError
        end
     end
