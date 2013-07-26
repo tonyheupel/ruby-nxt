@@ -40,5 +40,6 @@ state = OutputState.new :port => :c,
                         :tacho_limit => 360  # degrees = 1 rotation
 
 nxt.set_output_state state
+nxt.disconnect
 ```
 
